@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <title>스파르타코딩클럽 | 부트스트랩 연습하기</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+        .mytitle {
+            background-color: green;
+            color: white;
+
+            height: 250px;
+
+            display: flex;
+            /* 안에 내용물을 정렬할 때는 display: flex;를 사용하여 정렬을 한다. */
+            flex-direction: column;
+            /* colum 세로(열)로 정렬 row 가로(행)로 정렬 */
+            align-items: center;
+            justify-content: center;
+
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://movie-phinf.pstatic.net/20210715_95/1626338192428gTnJl_JPEG/movie_image.jpg');
+            background-position: center;
+            background-size: cover;
+        }
+
+        .mytitle>button {
+            width: 250px;
+            height: 50px;
+
+            background-color: transparent;
+            /* transparent : 배경을 투명으로 */
+
+            border: 1px solid white;
+            color: white;
+
+            border-radius: 50px;
+
+            margin-top: 20px;
+            /* 바깥 쪽 기준으로 띄울거니까 margin 이용 안쪽 이었음 padding */
+        }
+
+        .mytitle>button:hover {
+            border: 2px solid white;
+        }
+
+        .mycoment {
+            color: grey;
+        }
+
+        .mycards {
+            width: 1200px;
+            margin: 20px auto;
+            /* 중복된 값은 이렇게 두개만 작성해도 됨 . 왼쪽 하나는 위아래가 하나의 쌍, 오른쪽은 좌우가 한 쌍 그래서 위아래 같은 값 좌우 같은 값을 주고 싶으면 저렇게 */
+            /* margin: 20px auto 20px auto; 이렇게 쓰는 걸 위처럼 작성한 것임 */
+        }
+
+        .mypost {
+            width: 500px;
+            margin: 20px auto;
+            padding: 20px 20px;
+
+            box-shadow: 0px 0px 3px 0px gray;
+        }
+
+        .mybtn {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .mybtn>button {
+            margin-right: 10px;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            fetch("http://spartacodingclub.shop/sparta_api/weather/seoul").then(res => res.json()).then(data => {
+                let number = data['temp']
+                $('#temp').text(number)
+            })
+            fetch("http://spartacodingclub.shop/web/api/movie").then(res => res.json()).then(data => {
+                let rows = data['movies']
+                $("#cards").empty()
+                rows.forEach((a) => {
+                    console.log(a)
+                    let title = a['title']
+                    let desc = a['desc']
+                    let comment = a['comment']
+                    let star = a['star']
+                    let image = a['image']
+
+                    let star_image = '⭐'.repeat(star)
+
+                    let temp_html = `<div class="col">
+                                        <div class="card h-100">
+                                            <img src="${image}"
+                                                class="card-img-top" alt="...">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${title}</h5>
+                                                <p class="card-text">${desc}</p>
+                                                <p>${star_image}</p>
+                                                <p class='mycoment'>${comment}</p>
+                                            </div>
+                                        </div>
+                                    </div>`
+                                    $('#cards').append(temp_html)
+                })
+
+            })
+        })
+
+
+    </script>
+</head>
+
+<body>
+    <div class='mytitle'>
+        <h1>내 생에 최고의 영화들</h1>
+        <div>현재 서울의 날씨 : <span id="temp">20</span>도</div>
+        <button onclick="hey()">영화 기록하기</button>
+    </div>
+    <div class='mypost'>
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">영화URL</label>
+        </div>
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01">별점</label>
+            <select class="form-select" id="inputGroupSelect01">
+                <option selected>-- 선택하기 --</option>
+                <option value="1">⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+            </select>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <label for="floatingPassword">코맨트</label>
+        </div>
+        <div class='mybtn'>
+            <button type="button" class="btn btn-dark">기록하기</button>
+            <button type="button" class="btn btn-outline-dark">닫기</button>
+        </div>
+    </div>
+    <div class='mycards'>
+        <div id="cards" class="row row-cols-1 row-cols-md-4 g-4">
+
+            <div class="col">
+                <div class="card h-100">
+                    <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
+                        class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">영화 제목이 들어갑니다.</h5>
+                        <p class="card-text">여기에 코멘트가 들어갑니다.</p>
+                        <p>⭐⭐⭐</p>
+                        <p class='mycoment'>나의 의견</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100">
+                    <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
+                        class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">영화 제목이 들어갑니다.</h5>
+                        <p class="card-text">여기에 코멘트가 들어갑니다.</p>
+                        <p>⭐⭐⭐</p>
+                        <p class='mycoment'>나의 의견</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100">
+                    <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
+                        class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">영화 제목이 들어갑니다.</h5>
+                        <p class="card-text">여기에 코멘트가 들어갑니다.</p>
+                        <p>⭐⭐⭐</p>
+                        <p class='mycoment'>나의 의견</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100">
+                    <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
+                        class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">영화 제목이 들어갑니다.</h5>
+                        <p class="card-text">여기에 코멘트가 들어갑니다.</p>
+                        <p>⭐⭐⭐</p>
+                        <p class='mycoment'>나의 의견</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
