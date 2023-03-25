@@ -1,3 +1,10 @@
+from pymongo import MongoClient
+import certifi
+
+ca = certifi.where()
+client = MongoClient('mongodb+srv://sparta:test@cluster0.xexdmas.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
+db = client.dbsparta
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -14,4 +21,9 @@ for tr in trs:
         title = a.text
         rank = tr.select_one('td:nth-child(1) > img')['alt']
         star = tr.select_one('td.point').text
-        print(rank, title, star)
+        doc = {
+            'tltle' : title,
+            'rank' : rank,
+            'star' : star
+        }
+        db.movies.insert_one(doc)
